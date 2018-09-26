@@ -1,0 +1,3 @@
+[submodule "shell/external/linmath.h"]
+	path = shell/external/linmath.h
+	url = git@github.com:jaburns/linmath.h
