@@ -1,3 +1,7 @@
 /racketglshell.dll
 /shell/x64
 /shell/*.vcxproj.*
+/shell/external/glew-*
+/shell/external/SDL2-*
+!/shell/external/glew-*.zip
+!/shell/external/SDL2-*.zip
