@@ -99,6 +99,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src/main.c" />
+    <ClCompile Include="src\render.c" />
+    <ClCompile Include="src\thread.c" />
+    <ClCompile Include="src\media.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\render.h" />
+    <ClInclude Include="src\thread.h" />
+    <ClInclude Include="src\media.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
