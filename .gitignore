@@ -1,4 +1,4 @@
-/racketglshell.dll
+/*.dll
 /shell/x64
 /shell/*.vcxproj.*
 /shell/external/glew-*
