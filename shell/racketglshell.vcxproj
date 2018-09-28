@@ -107,6 +107,7 @@
     <ClInclude Include="src\render.h" />
     <ClInclude Include="src\thread.h" />
     <ClInclude Include="src\media.h" />
+    <ClInclude Include="src\util.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

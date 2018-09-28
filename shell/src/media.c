@@ -1,5 +1,7 @@
 #include "media.h"
+#include "util.h"
 
+#include <string.h>
 #include <GL/glew.h>
 #include <SDL.h>
 
@@ -9,6 +11,7 @@ typedef struct MediaContext
     SDL_GLContext sdl_gl_context;
     int window_width;
     int window_height;
+    InputState input_state;
 }
 MediaContext;
 
@@ -64,6 +67,40 @@ bool media_open(const char *title, int width, int height)
     return true;
 }
 
+static void update_input_state(InputState *state, const SDL_Event *event)
+{
+    const SDL_Keycode key = event->key.keysym.sym;
+
+    int index;
+    FIND_INDEX(index, state->keys_down, state->num_keys_down, key);
+
+    switch (event->type) 
+    {
+        case SDL_KEYDOWN:
+            if (index >= 0) break;
+
+            state->num_keys_down++;
+
+            if (state->num_keys_down == 1)
+                state->keys_down = malloc(sizeof(SDL_Keycode));
+            else
+                state->keys_down = realloc(state->keys_down, state->num_keys_down*sizeof(SDL_Keycode));
+
+            state->keys_down[state->num_keys_down - 1] = key;
+
+            break;
+
+        case SDL_KEYUP:
+            if (index < 0) break;
+
+            state->keys_down[index] = state->keys_down[state->num_keys_down - 1];
+            state->num_keys_down--;
+            state->keys_down = realloc(state->keys_down, state->num_keys_down*sizeof(SDL_Keycode));
+
+            break;
+    }
+}
+
 bool media_flip_frame_poll_events(void)
 {
     bool still_running = true;
@@ -73,6 +110,8 @@ bool media_flip_frame_poll_events(void)
 
     while (SDL_PollEvent(&event))
     {
+        update_input_state(&s_context.input_state, &event);
+
         switch (event.type) 
         {
             case SDL_QUIT:
@@ -108,4 +147,33 @@ void media_close(void)
 
         s_context.sdl_window = NULL;
     }
+}
+
+InputState *copy_input_state(const InputState *from)
+{
+    InputState *result = malloc(sizeof(InputState));
+    result->num_keys_down = from->num_keys_down;
+
+    if (result->num_keys_down > 0)
+    {
+        result->keys_down = malloc(result->num_keys_down * sizeof(SDL_Keycode));
+        memcpy(result->keys_down, from->keys_down, result->num_keys_down * sizeof(SDL_Keycode));
+    }
+    else
+        result->keys_down = NULL;
+
+    return result;
+}
+
+InputState *read_input_state(void)
+{
+    return copy_input_state(&s_context.input_state);
+}
+
+void free_input_state(InputState *state)
+{
+    if (state->num_keys_down > 0)
+        free(state->keys_down);
+
+    free(state);
 }

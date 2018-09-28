@@ -75,6 +75,16 @@ DLL_EXPORT void shell_update(const SimState *state)
     mutex_release(s_shell.sim_state_mutex);
 }
 
+DLL_EXPORT InputState *shell_borrow_input_state(void)
+{
+    return read_input_state();
+}
+
+DLL_EXPORT void shell_release_input_state(InputState *state)
+{
+    free_input_state(state);
+}
+
 DLL_EXPORT void shell_close(void)
 {
     if (!s_shell.running) return;
